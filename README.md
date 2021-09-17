@@ -1,4 +1,4 @@
-## Fluorelax
+fluorelax
 =================================
 A prescription to calculate pragmatic relaxation rates of fluorinated biomolecules.
 This repository is currently under development.
