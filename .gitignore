@@ -1,0 +1,10 @@
+.DS_Store
+*.pyc
+*.pyo
+*.swp
+.project
+*~
+*.swp
+*.swo
+__pycache__
+*.log
