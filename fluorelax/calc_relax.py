@@ -55,10 +55,16 @@ class Calc_19F_Relaxation:
     """
     # these are class attributes, constant for each instance created
     # reduced plank's constant
-    h_bar = 1.04e-33    # Joules * sec / 2 pi
+    #h_bar = 1.04e-33    # Joules * sec / 2 pi
+    h_bar = 1.054e-34
     # gamma = gyromagnetic ratio = µ / p = magnetic moment / angular momemtum
     gammaF = 25.18e7    # rad / sec * Tesla
     gammaH = 26.75e7    # rad / sec * Tesla
+
+    # for testing (TODO)
+    # h_bar = 1
+    # gammaF = 1
+    # gammaH = 1
 
     # arguments here are instance attributes, varying for each instance created
     def __init__(self, tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter):
@@ -95,7 +101,7 @@ class Calc_19F_Relaxation:
             self.tc * (
             (3 / (1 + (self.omegaF ** 2) * (self.tc ** 2))) + 
             (1 / (1 + ((self.gammaF - self.gammaH) ** 2) * (self.tc ** 2))) +
-            (6 / (1 + ((self.gammaF - self.gammaH) ** 2) * (self.tc ** 2)))
+            (6 / (1 + ((self.gammaF + self.gammaH) ** 2) * (self.tc ** 2)))
                        )
                 )
 
@@ -104,12 +110,12 @@ class Calc_19F_Relaxation:
         Dipole-dipole induced spin-spin (R2) relaxation effects.
         """
         return ((1 / 20) * 
-            ((self.gammaF**2 * self.gammaH**2 * self.h_bar**2) / self.fh_dist**6) *
+            (((self.gammaF ** 2) * (self.gammaH ** 2) * (self.h_bar ** 2)) / (self.fh_dist ** 6)) *
             self.tc * ( 4 + 
-            (3 / (1 + self.omegaF**2 * self.tc**2)) + 
-            (6 / (1 + self.omegaH**2 * self.tc**2)) +
-            (1 / (1 + (self.gammaF - self.gammaH)**2 * self.tc**2)) +
-            (6 / (1 + (self.gammaF - self.gammaH)**2 * self.tc**2))
+            (3 / (1 + (self.omegaF ** 2) * (self.tc ** 2))) + 
+            (6 / (1 + (self.omegaH ** 2) * (self.tc ** 2))) +
+            (1 / (1 + ((self.gammaF - self.gammaH) ** 2) * (self.tc ** 2))) +
+            (6 / (1 + ((self.gammaF + self.gammaH) ** 2) * (self.tc ** 2)))
                        )
                 )
 
@@ -143,11 +149,13 @@ class Calc_19F_Relaxation:
         R1 : float?
         R2 : float?
         """
-        r1_dd = self.calc_dd_r1() ; print(f"1dd: {r1_dd}")
-        r1_csa = self.calc_csa_r1() ; print(f"1csa: {r1_csa}")
-        r2_dd = self.calc_dd_r2()
-        r2_csa = self.calc_csa_r2()
-        R1 = (r1_dd**2) + (r1_csa**2)
-        R2 = (r2_dd**2) + (r2_csa**2)
+        r1_dd = self.calc_dd_r1()   ; print(f"\nR1dd: {r1_dd}")
+        r1_csa = self.calc_csa_r1() ; print(f"R1csa: {r1_csa}")
+        r2_dd = self.calc_dd_r2()   ; print(f"R2dd: {r2_dd}")
+        r2_csa = self.calc_csa_r2() ; print(f"R2csa: {r2_csa}")
+        #R1 = (r1_dd**2) + (r1_csa**2)
+        #R2 = (r2_dd**2) + (r2_csa**2)
+        R1 = r1_dd * r1_csa
+        R2 = r2_dd * r2_csa
         return R1, R2
 

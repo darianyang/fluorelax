@@ -1,10 +1,11 @@
 """
-Unit and regression test for the fluorelax program.
+Unit and regression tests for the fluorelax program.
 """
 
 # Import package, test suite, and other packages as needed
 import fluorelax
 import pytest
+
 import numpy as np
 import sys
 
@@ -20,72 +21,45 @@ import sys
 # decorator to skip in pytest
 #@pytest.mark.skip
 
-# Test class?
-
-def test_calc_dd_r1():
+class Test_Calc_19F_Relaxation():
     """
-    Test of relaxation calculations.
+    Test each method of the Calc_19F_Relaxation class.
     """
+    fh_dist = 1                     # distance between 19F-1H (Angstrom)
+    magnet = 1                      # Tesla (600 MHz of 1H+)
+    tc = 1                          # 8.2ns for CypA
+    reduced_anisotropy = 1          # ppm, reduced anisotropy for W4F
+    asymmetry_parameter = 1         # asymmetry parameter for W4F
 
-    r1 = np.array([0, 0, 0])
-    r2 = np.array([0, 1, 0])
+    calc_relax = fluorelax.Calc_19F_Relaxation(tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter)
 
-    expected_distance = 1
-    calculated_distance = molecool.calculate_distance(r1, r2)
+    def test_calc_dd_r1(self):
+        calculated_dd_r1 = self.calc_relax.calc_dd_r1()
+        #expected_ff_r1 = 2.0249e-48    # with hbar and gammas
+        expected_dd_r1 = 0.37           # with everything to 1
+        assert pytest.approx(expected_dd_r1) == calculated_dd_r1
 
-    assert expected_distance == calculated_distance
+    def test_calc_dd_r2(self):
+        calculated_dd_r2 = self.calc_relax.calc_dd_r2()
+        #expected_dd_r2 = 2.0249e-48    # with hbar and gammas
+        expected_dd_r2 = 0.535          # with everything to 1
+        assert pytest.approx(expected_dd_r2) == calculated_dd_r2
 
-# decorator to mark, can selectively test
-# pytest -v -m "slow" : to test all marked slow
-# pytest -v -m "not slow" : to test all not marked slow
-#@pytest.mark.slow
+    def test_calc_csa_r1(self):
+        calculated_csa_r1 = self.calc_relax.calc_csa_r1()
+        #expected_ff_r1 = 2.0249e-48    # with hbar and gammas
+        expected_csa_r1 = 0.20          # with everything to 1
+        assert pytest.approx(expected_csa_r1) == calculated_csa_r1
 
-# # can put function variables in parametrize instead
-# # can stack > 1  parametrize stacks, this leads to a test of all parm combinations
-# @pytest.mark.parametrize(
-#     "r1, r2, r3, expected_angle",
-#     # list of vars to test for r1,r2,r3,angle
-#     [
-#         (np.array([0, 0, -1]), np.array([0, 0, 0]), np.array([0, 1, 0]), 90),
-#         (np.array([0, 0, -1]), np.array([0, 1, 0]), np.array([1, 0, 0]), 60)
-#     ]
-# )
-# def test_calculate_angle(r1, r2, r3, expected_angle):
-#     """
-#     Test of angle calculation.
-#     """
+    def test_calc_csa_r2(self):
+        calculated_csa_r2 = self.calc_relax.calc_csa_r2()
+        #expected_csa_r2 = 2.0249e-48    # with hbar and gammas
+        expected_csa_r2 = 0.3667         # with everything to 1
+        assert pytest.approx(expected_csa_r2, rel=1e-3) == calculated_csa_r2
 
-#     #r1 = np.array([0, 0, -1])
-#     #r2 = np.array([0, 0, 0])
-#     #r3 = np.array([1, 0, 0])
-#     #expected_angle = 90
+    def test_calc_overall_r1_r2(self):
+        calculated_r1, calculated_r2 = self.calc_relax.calc_overall_r1_r2()
+        expected_r1 = 0.1769
+        expected_r2 = 0.4206
+        assert pytest.approx((expected_r1, expected_r2), rel=1e-3) == (calculated_r1, calculated_r2)
 
-#     calculated_angle = molecool.calculate_angle(r1, r2, r3, degrees=True)
-
-#     # floating point comparisons
-#     assert pytest.approx(expected_angle) == calculated_angle
-
-# @pytest.mark.parametrize(
-#     "r1, r2, r3, expected_angle",
-#     # list of vars to test for r1,r2,r3,angle
-#     [
-#         (np.array([0, 0, -1]), np.array([0, 0, 0]), np.array([0, 1, 0]), np.radians(90)),
-#         (np.array([0, 0, -1]), np.array([0, 1, 0]), np.array([1, 0, 0]), np.radians(60))
-#     ]
-# )
-# def test_calculate_angle_radians(r1, r2, r3, expected_angle):
-#     """
-#     Test of angle calculation in radians.
-#     """
-#     calculated_angle = molecool.calculate_angle(r1, r2, r3)
-#     assert pytest.approx(expected_angle) == calculated_angle
-
-# def test_center_of_mass():
-#     symbols = np.array(['C', 'H', 'H', 'H', 'H'])
-#     coordinates = np.array([[1,1,1], [2.4,1,1], [-0.4, 1, 1], [1, 1, 2.4], [1, 1, -0.4]])
-
-#     center_of_mass = molecool.calculate_center_of_mass(symbols, coordinates)
-
-#     expected_center = np.array([1,1,1])
-
-#     assert np.array_equal(center_of_mass, expected_center)

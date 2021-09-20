@@ -7,3 +7,5 @@ Description:
 """
 
 # Welcome to the fluorelax module! 
+
+from .calc_relax import *
