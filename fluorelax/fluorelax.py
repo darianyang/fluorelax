@@ -11,6 +11,8 @@ if __name__ == '__main__':
     # args_list
     parm = "data/3k0n_w4f_dry.prmtop"
     crd = "data/3k0n_w4f_frame_198ns_dry.nc"
+    # parm = "data/3k0n_w4f_solv.prmtop"
+    # crd = "data/3k0n_w4f_frame_198ns_solv.nc"
     magnet = 14.1                   # Tesla (600 MHz of 1H+)
     tc = 8.2 * 10**-9               # 8.2ns for CypA
     reduced_anisotropy = 62.8       # ppm, reduced anisotropy for W4F
@@ -30,6 +32,7 @@ if __name__ == '__main__':
     # TODO: do for each frame, also test with water
     """
     fh_dists = calc_FH_distances(parm, crd)
+    print("distances: ", fh_dists)
 
     """
     For each distance value, calculate the R1 and R2 value.
