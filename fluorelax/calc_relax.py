@@ -6,13 +6,6 @@ import numpy as np
 import MDAnalysis as mda
 from MDAnalysis.analysis import distances
 
-# args_list.X
-parm = "data/3k0n_w4f_dry.prmtop"
-crd = "data/3k0n_w4f_frame_198ns_dry.nc"
-tc = 8.2 * 10**-9               # 8.2ns for CypA
-reduced_anisotropy = 62.8       # ppm, reduced anisotropy for W4F
-asymmetry_parameter = 0.9       # asymmetry parameter for W4F
-
 
 # select all of the protons within 3A of the fluorine
     # return r_FH of all protons
@@ -56,19 +49,16 @@ class Calc_19F_Relaxation:
     # these are class attributes, constant for each instance created
     # reduced plank's constant
     #h_bar = 1.04e-33    # Joules * sec / 2 pi
-    h_bar = 1.054e-34
+    h_bar = 1.054e-34   # TODO: which value?
     # gamma = gyromagnetic ratio = µ / p = magnetic moment / angular momemtum
     gammaF = 25.18e7    # rad / sec * Tesla
     gammaH = 26.75e7    # rad / sec * Tesla
 
-    # for testing (TODO)
-    # h_bar = 1
-    # gammaF = 1
-    # gammaH = 1
-
     # arguments here are instance attributes, varying for each instance created
     def __init__(self, tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter):
         """
+        Relaxation calculation constants.
+
         Parameters
         ----------
         tc : float
@@ -77,7 +67,7 @@ class Calc_19F_Relaxation:
             The magnetic induction value in Tesla. 
             e.g. 14.1 T = 600MHz (1H+ freq)
         fh_dist : float
-            19F-1H distance for a single proton.
+            19F-1H distance for a single proton. Input in Angstroms, conveted to m.
         reduced_anisotropy : float
             In ppm.
         asymmetry_parameter : float
@@ -89,8 +79,11 @@ class Calc_19F_Relaxation:
         self.reduced_anisotropy = float(reduced_anisotropy)
         self.asymmetry_parameter = float(asymmetry_parameter)
         # omega = resonance frequency = gamma * Bo (static NMR field - Tesla) 
-        self.omegaH = float(self.gammaH * self.magnet)
-        self.omegaF = float(self.gammaF * self.magnet)
+        #self.omegaH = float(self.gammaH * self.magnet)
+        #self.omegaF = float(self.gammaF * self.magnet)
+        # TODO: make these dynamically calculated
+        self.omegaH = 600.1 # MHz at 14.1T
+        self.omegaF = 564.6 # MHz at 14.1T
 
     def calc_dd_r1(self):
         """
@@ -146,16 +139,16 @@ class Calc_19F_Relaxation:
 
         Returns
         -------
-        R1 : float?
-        R2 : float?
+        R1 : float
+        R2 : float
         """
         r1_dd = self.calc_dd_r1()   ; print(f"\nR1dd: {r1_dd}")
         r1_csa = self.calc_csa_r1() ; print(f"R1csa: {r1_csa}")
         r2_dd = self.calc_dd_r2()   ; print(f"R2dd: {r2_dd}")
         r2_csa = self.calc_csa_r2() ; print(f"R2csa: {r2_csa}")
-        #R1 = (r1_dd**2) + (r1_csa**2)
-        #R2 = (r2_dd**2) + (r2_csa**2)
-        R1 = r1_dd * r1_csa
-        R2 = r2_dd * r2_csa
+        R1 = (r1_dd**2) + (r1_csa**2)
+        R2 = (r2_dd**2) + (r2_csa**2)
+        #R1 = r1_dd * r1_csa
+        #R2 = r2_dd * r2_csa
         return R1, R2
 

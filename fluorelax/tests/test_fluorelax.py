@@ -10,16 +10,13 @@ import numpy as np
 import sys
 
 # look at file coverage for testing
-# pytest -v --cov=molecool
+# pytest -v --cov=fluorelax
 # produces .coverage binary file to be used by other tools to visualize 
 # do not need 100% coverage, 80-90% is very high
 
 # can have report in 
-# $ pytest -v --cov=molecool --cov-report=html
+# $ pytest -v --cov=fluorelax --cov-report=html
 # index.html to better visualize the test coverage
-
-# decorator to skip in pytest
-#@pytest.mark.skip
 
 class Test_Calc_19F_Relaxation():
     """
@@ -30,8 +27,15 @@ class Test_Calc_19F_Relaxation():
     tc = 1                          # 8.2ns for CypA
     reduced_anisotropy = 1          # ppm, reduced anisotropy for W4F
     asymmetry_parameter = 1         # asymmetry parameter for W4F
-
+    # instantiate the relaxation calc class
     calc_relax = fluorelax.Calc_19F_Relaxation(tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter)
+    # set class attributes to new values
+    calc_relax.h_bar = 1            # reduced Plank's constant 
+    calc_relax.gammaH = 1           # gyromagnetic ratio 1H
+    calc_relax.gammaF = 1           # gyromagnetic ratio 19F
+    calc_relax.omegaH = 1           # Larmor frequency of 1H 
+    calc_relax.omegaF = 1           # Larmor frequency of 1H
+
 
     def test_calc_dd_r1(self):
         calculated_dd_r1 = self.calc_relax.calc_dd_r1()
