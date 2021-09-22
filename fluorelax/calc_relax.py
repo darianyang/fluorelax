@@ -1,43 +1,8 @@
 """
-Fluorelax main calc.
+Fluorelax main relaxation calc.
 """
 
 import numpy as np
-import MDAnalysis as mda
-from MDAnalysis.analysis import distances
-
-
-# select all of the protons within 3A of the fluorine
-    # return r_FH of all protons
-def calc_FH_distances(parm, crd, step=1, dist=3):
-    """
-    Parameters
-    ----------
-    parm : str
-        The path to the parameter file. 
-    crd : str
-        The path to the coordinate/trajectory file.
-    step : int
-        Step size of the coordinates being loaded, default 1.
-    dist : int
-        The distance to calculate F-H distances within.
-        Default 3 Angstroms.
-
-    Returns
-    -------
-    fh_dists : array
-        Array of multiple float values for each F-H ditance within 3A of F.
-    """
-    # load trajectory using MDA
-    traj = mda.Universe(parm, crd, in_memory=True, in_memory_step=step)
-    fluorine = traj.select_atoms("name F*")
-    protons = traj.select_atoms(f"around {dist} name F*").select_atoms("name H*")
-    fh_dists = distances.distance_array(fluorine.positions, protons.positions)
-    return fh_dists
-
-# need to loop through each FH distance
-#fh_dists = calc_FH_distances(parm, crd)
-
 
 # this can be used as a parent class, and child classes can then expand upon it
 # can instantiate the class using the particular function/calc that is needed
@@ -48,11 +13,13 @@ class Calc_19F_Relaxation:
     """
     # these are class attributes, constant for each instance created
     # reduced plank's constant
-    #h_bar = 1.04e-33    # Joules * sec / 2 pi
-    h_bar = 1.054e-34   # TODO: which value?
+    h_bar = 1.04e-33    # Joules * sec / 2 pi
+    #h_bar = 1.054e-34   # TODO: which value?
     # gamma = gyromagnetic ratio = µ / p = magnetic moment / angular momemtum
     gammaF = 25.18e7    # rad / sec * Tesla
     gammaH = 26.75e7    # rad / sec * Tesla
+    # gammaF = 40.05       # MHz / Tesla
+    # gammaH = 42.58       # MHz / Tesla
 
     # arguments here are instance attributes, varying for each instance created
     def __init__(self, tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter):
@@ -117,9 +84,9 @@ class Calc_19F_Relaxation:
         CSA induced spin-lattic (R1) relaxation effects.
         """
         return ((3 / 10) *
-            (self.omegaF**2 * self.reduced_anisotropy**2 * self.tc) *
-            (1 + (self.asymmetry_parameter**2 / 3)) *
-            (1 / (1 + (self.omegaF**2 * self.tc**2)))
+            ((self.omegaF ** 2) * (self.reduced_anisotropy ** 2) * self.tc) *
+            (1 + ((self.asymmetry_parameter ** 2) / 3)) *
+            (1 / (1 + ((self.omegaF ** 2) * (self.tc ** 2))))
                 )
 
     def calc_csa_r2(self):
@@ -127,9 +94,9 @@ class Calc_19F_Relaxation:
         CSA induced spin-spin (R2) relaxation effects.
         """
         return ((1 / 20) *
-            (self.omegaF**2 * self.reduced_anisotropy**2 * self.tc) *
-            (1 + (self.asymmetry_parameter**2 / 3)) *
-            (4 + (3 / (1 + (self.omegaF**2 * self.tc**2))))
+            ((self.omegaF ** 2) * (self.reduced_anisotropy ** 2) * self.tc) *
+            (1 + ((self.asymmetry_parameter ** 2) / 3)) *
+            (4 + (3 / (1 + ((self.omegaF ** 2) * (self.tc ** 2)))))
                 )
 
     def calc_overall_r1_r2(self):
@@ -142,12 +109,17 @@ class Calc_19F_Relaxation:
         R1 : float
         R2 : float
         """
-        r1_dd = self.calc_dd_r1()   ; print(f"\nR1dd: {r1_dd}")
-        r1_csa = self.calc_csa_r1() ; print(f"R1csa: {r1_csa}")
-        r2_dd = self.calc_dd_r2()   ; print(f"R2dd: {r2_dd}")
-        r2_csa = self.calc_csa_r2() ; print(f"R2csa: {r2_csa}")
-        R1 = (r1_dd**2) + (r1_csa**2)
-        R2 = (r2_dd**2) + (r2_csa**2)
+        r1_dd = self.calc_dd_r1()   
+        r1_csa = self.calc_csa_r1()
+        r2_dd = self.calc_dd_r2()   
+        r2_csa = self.calc_csa_r2()
+        # print(f"\nR1dd: {r1_dd}")
+        # print(f"R1csa: {r1_csa}")
+        # print(f"R2dd: {r2_dd}")
+        # print(f"R2csa: {r2_csa}")
+
+        R1 = (r1_dd ** 2) + (r1_csa ** 2)
+        R2 = (r2_dd ** 2) + (r2_csa ** 2)
         #R1 = r1_dd * r1_csa
         #R2 = r2_dd * r2_csa
         return R1, R2
