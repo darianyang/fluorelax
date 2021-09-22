@@ -34,7 +34,7 @@ if __name__ == '__main__':
     Load trajectory or pdb data and calc all F-H distances.
     # TODO: do for each frame, also test with water
     """
-    traj = load_traj(parm, crd, step=1)
+    traj = load_traj(parm, crd, step=10)
     fh_dist_base = Calc_FH_Dists(traj, verbose=False).run()
 
     """
