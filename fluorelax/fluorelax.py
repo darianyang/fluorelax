@@ -24,6 +24,10 @@ if __name__ == '__main__':
     reduced_anisotropy = 62.8       # ppm, reduced anisotropy for W4F
     asymmetry_parameter = 0.9       # asymmetry parameter for W4F
 
+    sgm11 = 11.2
+    sgm22 = -48.3
+    sgm33 = -112.8
+
 
     # """
     # Command line
@@ -50,7 +54,7 @@ if __name__ == '__main__':
         avg_r1 = []
         avg_r2 = []
         for fh_dist in frame:
-            calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter)
+            calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33)
             R1, R2 = calc_relax.calc_overall_r1_r2()
             avg_r1.append(R1)
             avg_r2.append(R2)
