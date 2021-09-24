@@ -13,13 +13,10 @@ class Calc_19F_Relaxation:
     """
     # these are class attributes, constant for each instance created
     # reduced plank's constant
-    h_bar = 1.04e-33    # Joules * sec / 2 pi
-    #h_bar = 1.054e-34   # TODO: which value?
+    h_bar = (6.626e-34) / (2 * np.pi)       # Joules * sec
     # gamma = gyromagnetic ratio = µ / p = magnetic moment / angular momemtum
-    gammaF = 25.18e7    # rad / sec * Tesla
-    gammaH = 26.75e7    # rad / sec * Tesla
-    # gammaF = 40.05       # MHz / Tesla
-    # gammaH = 42.58       # MHz / Tesla
+    gammaF = 25.18e7                        # rad / sec * Tesla
+    gammaH = 26.75e7                        # rad / sec * Tesla
 
     # arguments here are instance attributes, varying for each instance created
     def __init__(self, tc, magnet, fh_dist, reduced_anisotropy, asymmetry_parameter):
@@ -39,18 +36,21 @@ class Calc_19F_Relaxation:
             In ppm.
         asymmetry_parameter : float
             Parameter n, from 0-1.
+        TODO: CSA tensors: sigma11, sigma22, sigma33 instead of reduced_anisotropy and asymmetry_parameter
+
         """
         self.tc = float(tc)
         self.magnet = float(magnet)
-        self.fh_dist = float(fh_dist)
+        self.fh_dist = float(fh_dist) * 10**-10 # Angstrom to meters
         self.reduced_anisotropy = float(reduced_anisotropy)
         self.asymmetry_parameter = float(asymmetry_parameter)
         # omega = resonance frequency = gamma * Bo (static NMR field - Tesla) 
         #self.omegaH = float(self.gammaH * self.magnet)
         #self.omegaF = float(self.gammaF * self.magnet)
         # TODO: make these dynamically calculated
-        self.omegaH = 600.1 # MHz at 14.1T
-        self.omegaF = 564.6 # MHz at 14.1T
+        # MHz to Hz (per cycle or 2pi), times 2pi 
+        self.omegaH = 600.1e6 * (2 * np.pi) # MHz at 14.1T 
+        self.omegaF = 564.6e6 * (2 * np.pi) # MHz at 14.1T
 
     def calc_dd_r1(self):
         """
@@ -113,14 +113,17 @@ class Calc_19F_Relaxation:
         r1_csa = self.calc_csa_r1()
         r2_dd = self.calc_dd_r2()   
         r2_csa = self.calc_csa_r2()
-        # print(f"\nR1dd: {r1_dd}")
-        # print(f"R1csa: {r1_csa}")
-        # print(f"R2dd: {r2_dd}")
-        # print(f"R2csa: {r2_csa}")
+        print(f"\nR1dd: {r1_dd}")
+        print(f"R1csa: {r1_csa}")
+        print(f"R2dd: {r2_dd}")
+        print(f"R2csa: {r2_csa}")
 
-        R1 = (r1_dd ** 2) + (r1_csa ** 2)
-        R2 = (r2_dd ** 2) + (r2_csa ** 2)
-        #R1 = r1_dd * r1_csa
-        #R2 = r2_dd * r2_csa
+        # according to Rieko
+        # R1 = (r1_dd ** 2) + (r1_csa ** 2)
+        # R2 = (r2_dd ** 2) + (r2_csa ** 2)
+
+        # according to Manman's code
+        R1 = r1_dd + r1_csa
+        R2 = r2_dd + r2_csa
         return R1, R2
 

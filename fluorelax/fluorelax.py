@@ -1,5 +1,8 @@
 """
 Main call.
+
+TODO:
+- parallize the mda processing portion?
 """
 
 from command_line import *
