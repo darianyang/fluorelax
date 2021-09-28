@@ -6,6 +6,9 @@ This repository is currently under development.
 
 This package reqiures the following:
 - Numpy
+- MDAnalysis
+- Matplotlib
+- Pandas
 
 Features should be developed on branches. To create and switch to a branch, use the command:
 
