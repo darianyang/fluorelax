@@ -15,8 +15,8 @@ class Calc_19F_Relaxation:
     # reduced plank's constant
     h_bar = (6.626e-34) / (2 * np.pi)       # Joules * sec
     # gamma = gyromagnetic ratio = µ / p = magnetic moment / angular momemtum
-    gammaF = 25.18e7                        # rad / sec * Tesla
     gammaH = 26.75e7                        # rad / sec * Tesla
+    gammaF = 25.17e7                        # rad / sec * Tesla
 
     # arguments here are instance attributes, varying for each instance created
     def __init__(self, tc, magnet, fh_dist, sigma11, sigma22, sigma33):
@@ -42,8 +42,6 @@ class Calc_19F_Relaxation:
         self.tc = float(tc)
         self.magnet = float(magnet)
         self.fh_dist = float(fh_dist) * 10**-10 # Angstrom to meters
-        #self.reduced_anisotropy = float(reduced_anisotropy)
-        #self.asymmetry_parameter = float(asymmetry_parameter)
         
         # omega = resonance frequency = gamma * Bo (static NMR field - Tesla) 
         #self.omegaH = float(self.gammaH * self.magnet)
@@ -51,19 +49,20 @@ class Calc_19F_Relaxation:
         
         # TODO: make these dynamically calculated (using magnet)
         # MHz to Hz (per cycle or 2pi), times 2pi 
-        self.omegaH = 600.1e6 * (2 * np.pi) # MHz at 14.1T 
-        self.omegaF = 564.6e6 * (2 * np.pi) # MHz at 14.1T
+        self.omegaH = 600.133e6 * (2 * np.pi) # MHz at 14.1T 
+        self.omegaF = 564.617e6 * (2 * np.pi) # MHz at 14.1T
 
         # calc_csa tensor terms
         sgm_para = sigma11 * 10**-6
         sgm_par = ((sigma22 * 10**-6) + (sigma33 * 10**-6)) / 2
-        self.sgm = sgm_para - sgm_par # TODO: maybe set this up better, figure out these terms
+        self.sgm = sgm_para - sgm_par # TODO: maybe set this up better, figure out what these terms are
 
         # Calculate spectral density terms.
-        self.J_f = 1 / (1 + self.omegaF**2 * self.tc**2)
-        self.J_h = 1 / (1 + self.omegaF * self.omegaH * self.tc * self.tc)
-        self.J_HmF = 1 / (1 + (self.omegaF - self.omegaH)**2 * self.tc**2)
-        self.J_HpF = 1 / (1 + (self.omegaF + self.omegaH)**2 * self.tc**2)
+        self.J_f = 1 / (1 + (self.omegaF**2 * self.tc**2))
+        #self.J_h = 1 / (1 + (self.omegaF * self.omegaH * self.tc**2))
+        self.J_h = 1 / (1 + (self.omegaH**2 * self.tc**2))
+        self.J_HmF = 1 / (1 + ((self.omegaF - self.omegaH)**2 * self.tc**2))
+        self.J_HpF = 1 / (1 + ((self.omegaF + self.omegaH)**2 * self.tc**2))
 
     def calc_dd_r1(self):
         """
@@ -142,10 +141,10 @@ class Calc_19F_Relaxation:
         r1_csa = self.calc_csa_r1()
         r2_dd = self.calc_dd_r2()   
         r2_csa = self.calc_csa_r2()
-        print(f"\nR1dd: {r1_dd}")
-        print(f"R1csa: {r1_csa}")
-        print(f"R2dd: {r2_dd}")
-        print(f"R2csa: {r2_csa}")
+        # print(f"\nR1dd: {r1_dd}")
+        # print(f"R1csa: {r1_csa}")
+        # print(f"R2dd: {r2_dd}")
+        # print(f"R2csa: {r2_csa}")
 
         # according to Rieko
         # R1 = (r1_dd ** 2) + (r1_csa ** 2)

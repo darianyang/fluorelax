@@ -47,6 +47,10 @@ class Calc_FH_Dists(AnalysisBase):
         trajectory = atomgroup.universe.trajectory
         super(Calc_FH_Dists, self).__init__(trajectory, verbose=verbose)
 
+        # TODO:
+        self.atomgroup = atomgroup
+        self.dist = dist
+
         # TODO: right now this selects the atoms in the beginning, should select in each frame
         # select 19F and 1H < 3A
         self.fluorine = atomgroup.select_atoms("name F*")
@@ -61,20 +65,30 @@ class Calc_FH_Dists(AnalysisBase):
         # it depends on the number of frames specified in run().
 
         # 3 columns: 1 for the frame index, and X for array of FH distances
-        self.results = np.zeros((self.n_frames, 1 + len(self.protons)))
+        self.results = np.zeros((self.n_frames, 2 + len(self.protons)))
 
     def _single_frame(self):
         """
         This function is called for every frame that we choose in run().
         """
+        # TODO: is this the best way to dynamically select protons?
+        self.protons = self.atomgroup.select_atoms(f"around {self.dist} name F*").select_atoms("name H*")
+
         # generate multiple 19F-1H distances per frame
         fh_dists = distances.distance_array(self.fluorine.positions, self.protons.positions)
+        #print(fh_dists)
 
         # the current timestep of the trajectory is self._ts
         self.results[self._frame_index, 0] = self._ts.frame
 
         # save distance arrays to results array
-        self.results[self._frame_index, 1:] = fh_dists
+        #self.results[self._frame_index, 1:] = fh_dists
+
+        for num, val in enumerate(fh_dists[0]):
+            #print(val)
+            self.results[self._frame_index, num + 1] = val
+
+        # TODO: should zeros be NaN for the avg?
 
     def _conclude(self):
         """

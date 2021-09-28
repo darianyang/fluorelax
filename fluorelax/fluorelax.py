@@ -42,11 +42,14 @@ if __name__ == '__main__':
     # TODO: do for each frame, also test with water
     """
     traj = load_traj(parm, crd, step=10)
-    fh_dist_base = Calc_FH_Dists(traj, verbose=False).run()
+    fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """
     For each distance value, calculate the R1 and R2 value.
     """
+
+    #print(fh_dist_base.results)
+
     # TODO: update to ndarrays
     r1 = []
     r2 = []
@@ -54,6 +57,8 @@ if __name__ == '__main__':
         avg_r1 = []
         avg_r2 = []
         for fh_dist in frame:
+            if fh_dist == 0:
+                continue # TODO
             calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33)
             R1, R2 = calc_relax.calc_overall_r1_r2()
             avg_r1.append(R1)
@@ -61,14 +66,16 @@ if __name__ == '__main__':
         r1.append(np.mean(avg_r1))
         r2.append(np.mean(avg_r2))
     
-    #print(f"R1: {r1} \n")
-    #print(f"R2: {r2} \n")
+    print(f"R1: {r1} \n")
+    print(f"R2: {r2} \n")
 
     """
     Plot the avg R1 and R2 per frame.
     """
     plt.plot(fh_dist_base.results[:,0], r1)
     plt.plot(fh_dist_base.results[:,0], r2)
+    #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
+    #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
     plt.show()
 
 
