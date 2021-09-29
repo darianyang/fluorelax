@@ -26,7 +26,10 @@ def create_cmd_arguments():
     ###########################################################
     ############### OPTIONAL ARGUMENTS ########################
     ###########################################################
-
+    parser.add_argument("-o", "--output_file", default=None,
+                        dest="output_file",
+                        help="The filename to which the data will be saved.",
+                        type=str)
 
 
     ##########################################################

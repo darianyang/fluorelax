@@ -77,7 +77,8 @@ if __name__ == '__main__':
     """
     Save the frame, avg and stdev R1 and R2 data as a tsv?
     """
-    np.savetxt("data/output.tsv", r1_r2, delimiter="\t")
+    if args.output_file is True:
+        np.savetxt(args.output_file, r1_r2, delimiter="\t")
 
     """
     Plot the avg R1 and R2 per frame. TODO: put into a seperate plotting script.
