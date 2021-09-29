@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # TODO: do for each frame, also test with water
     """
     # TODO: for big trajectories, can't load in_memory, must stream it but this can be slow
-    traj = load_traj(args.parm, [args.crd], step=1)
+    traj = load_traj(args.parm, [args.crd], step=args.step_size)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """

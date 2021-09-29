@@ -31,6 +31,11 @@ def create_cmd_arguments():
                         help="The filename to which the data will be saved.",
                         type=str)
 
+    parser.add_argument("--step", default=1, nargs="?",
+                        dest="step_size",
+                        help="Step size of the coordinates being loaded, default 1.",
+                        type=int)
+
 
     ##########################################################
     ############### REQUIRED ARGUMENTS #######################
