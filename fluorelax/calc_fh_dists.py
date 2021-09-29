@@ -64,7 +64,7 @@ class Calc_FH_Dists(AnalysisBase):
         # This must go here, instead of __init__, because
         # it depends on the number of frames specified in run().
 
-        # 3 columns: 1 for the frame index, and X for array of FH distances
+        # 3+ columns: 1 for the frame index, and X for array of FH distances
         self.results = np.zeros((self.n_frames, 2 + len(self.protons)))
 
     def _single_frame(self):

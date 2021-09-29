@@ -9,6 +9,7 @@ This package reqiures the following:
 - MDAnalysis
 - Matplotlib
 - Pandas
+- Scipy
 
 Features should be developed on branches. To create and switch to a branch, use the command:
 
