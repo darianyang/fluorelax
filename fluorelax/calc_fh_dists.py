@@ -15,7 +15,7 @@ def load_traj(parm, crd, step=1):
     ----------
     parm : str
         The path to the parameter file. 
-    crd : str
+    crd : str or list ? TODO
         The path to the coordinate/trajectory file.
     step : int
         Step size of the coordinates being loaded, default 1.
@@ -80,7 +80,8 @@ class Calc_FH_Dists(AnalysisBase):
         #print(fh_dists)
 
         # the current timestep of the trajectory is self._ts
-        self.results[self._frame_index, 0] = self._ts.frame
+        #self.results[self._frame_index, 0] = self._ts.frame
+        self.results[self._frame_index, 0] = self._trajectory.time
 
         # save distance arrays to results array
         #self.results[self._frame_index, 1:] = fh_dists
