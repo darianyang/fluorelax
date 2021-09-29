@@ -36,6 +36,11 @@ def create_cmd_arguments():
                         help="Step size of the coordinates being loaded, default 1.",
                         type=int)
 
+    parser.add_argument("--sys", default=None,
+                        dest="system",
+                        help="Systems with CSA definitons included: "
+                             "'w4f', 'w5f', 'w6f', 'w7f'.",
+                        type=str)
 
     ##########################################################
     ############### REQUIRED ARGUMENTS #######################

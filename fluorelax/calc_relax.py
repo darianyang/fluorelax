@@ -19,7 +19,7 @@ class Calc_19F_Relaxation:
     gammaF = 25.17e7                        # rad / sec * Tesla
 
     # arguments here are instance attributes, varying for each instance created
-    def __init__(self, tc, magnet, fh_dist, sigma11, sigma22, sigma33):
+    def __init__(self, tc, magnet, fh_dist, sigma11, sigma22, sigma33, aniso, eta):
         """
         Relaxation calculation constants.
 
@@ -38,6 +38,10 @@ class Calc_19F_Relaxation:
             CSA tensor (ppm)
         sigma33 : float
             CSA tensor (ppm)
+        aniso : float
+            Reduced anisotropy term (delta_sigma) 
+        eta : float
+            Asymmetry parameter
         """
         self.tc = float(tc)
         self.magnet = float(magnet)
@@ -58,8 +62,8 @@ class Calc_19F_Relaxation:
         self.sgm = sgm_para - sgm_par # TODO: maybe set this up better, figure out what these terms are
 
         # TODO: calc reduced anisotropy term (delta_sigma) and asymmetry parameter (eta) from csa tensors
-        self.aniso = -94.25e-6
-        self.eta = 0.9469
+        self.aniso = aniso
+        self.eta = eta
 
         # Calculate spectral density terms.
         self.J_f = 1 / (1 + (self.omegaF**2 * self.tc**2))

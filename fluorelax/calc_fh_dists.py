@@ -80,8 +80,8 @@ class Calc_FH_Dists(AnalysisBase):
         #print(fh_dists)
 
         # the current timestep of the trajectory is self._ts
-        #self.results[self._frame_index, 0] = self._ts.frame
-        self.results[self._frame_index, 0] = self._trajectory.time
+        self.results[self._frame_index, 0] = self._ts.frame
+        #self.results[self._frame_index, 0] = self._trajectory.time
 
         # save distance arrays to results array
         #self.results[self._frame_index, 1:] = fh_dists

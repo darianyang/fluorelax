@@ -21,11 +21,6 @@ if __name__ == '__main__':
     # crd = "data/3k0n_w4f_frame_198ns_solv.nc"
     magnet = 14.1                   # Tesla (600 MHz of 1H+)
     tc = 8.2e-9                     # 8.2ns for CypA, tc in sec
- 
-    # CSA tensors for 4F-Trp
-    sgm11 = 11.2
-    sgm22 = -48.3
-    sgm33 = -112.8
 
     """
     Command line
@@ -35,6 +30,33 @@ if __name__ == '__main__':
     # Retrieve list of args
     args = handle_command_line(argument_parser)
 
+    # TODO: hack for now, later put as seperate args?
+    # CSA tensors for 4F-Trp
+    if args.system == "w4f":
+        sgm11 = 11.2
+        sgm22 = -48.3
+        sgm33 = -112.8
+        aniso = -94.25e-6
+        eta = 0.9469
+    elif args.system == "w5f":
+        sgm11 = 4.8
+        sgm22 = -60.5
+        sgm33 = -86.1
+        aniso = 78.1e-6
+        eta = 0.4917
+    elif args.system == "w6f":
+        sgm11 = 12.9
+        sgm22 = -51.2
+        sgm33 = -91.6
+        aniso = 84.3e-6
+        eta = 0.7189
+    elif args.system == "w7f":
+        sgm11 = 4.6
+        sgm22 = -48.3
+        sgm33 = -123.3
+        aniso = -101.45e-6
+        eta = 0.7822
+    
     """
     Load trajectory or pdb data and calc all F-H distances.
     # TODO: do for each frame, also test with water
@@ -64,7 +86,7 @@ if __name__ == '__main__':
         for fh_dist in dists:
             if fh_dist == 0:
                 continue # TODO: is there a better way to do this?
-            calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33)
+            calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33, aniso, eta)
             R1, R2 = calc_relax.calc_overall_r1_r2()
             avg_r1.append(R1)
             avg_r2.append(R2)
@@ -85,9 +107,9 @@ if __name__ == '__main__':
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    #plt.plot(r1_r2[:, 0], r1_r2[:, 1])
-    #plt.plot(r1_r2[:, 0], r1_r2[:, 2])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    #plt.show()
+    plt.show()
 
