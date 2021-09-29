@@ -41,6 +41,7 @@ if __name__ == '__main__':
     Load trajectory or pdb data and calc all F-H distances.
     # TODO: do for each frame, also test with water
     """
+    # TODO: for big trajectories, can't load in_memory, must stream it but this can be slow
     traj = load_traj(parm, crd, step=1)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
@@ -56,11 +57,13 @@ if __name__ == '__main__':
 
     # array of size frames x 3 columns (frame, avg R1, avg R2) # TODO: add stdev?
     r1_r2 = np.zeros(shape=(len(fh_dist_base.results[:,1:]), 3))
-    r1_r2[:, 0] = fh_dist_base.results[:,0] 
-    for num, frame in enumerate(fh_dist_base.results[:,1:]):
+    r1_r2[:, 0] = fh_dist_base.results[:,0]
+    for num, dists in enumerate(fh_dist_base.results[:,1:]):
+        # TODO: these are relatively small lists, may not need to change to ndarray
+            # but if I do, then I need to cut out the NaN or zero values before the np.mean step
         avg_r1 = []
         avg_r2 = []
-        for fh_dist in frame:
+        for fh_dist in dists:
             if fh_dist == 0:
                 continue # TODO: is there a better way to do this?
             calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33)
@@ -76,8 +79,7 @@ if __name__ == '__main__':
     """
     Save the frame, avg and stdev R1 and R2 data as a tsv?
     """
-
-
+    np.savetxt("data/output.tsv", r1_r2, delimiter="\t")
 
     """
     Plot the avg R1 and R2 per frame. TODO: put into a seperate plotting script.
