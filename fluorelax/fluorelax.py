@@ -68,7 +68,7 @@ if __name__ == '__main__':
             R1, R2 = calc_relax.calc_overall_r1_r2()
             avg_r1.append(R1)
             avg_r2.append(R2)
-        r1_r2[num, 1] = np.mean(avg_r1)
+        r1_r2[num, 1] = np.sum(avg_r1)
         r1_r2[num, 2] = np.mean(avg_r2)
 
     #print(f"R1: {r1} \n")
@@ -85,9 +85,9 @@ if __name__ == '__main__':
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    #plt.plot(r1_r2[:, 0], r1_r2[:, 1])
     #plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    plt.show()
+    #plt.show()
 

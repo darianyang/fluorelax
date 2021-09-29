@@ -57,6 +57,10 @@ class Calc_19F_Relaxation:
         sgm_par = ((sigma22 * 10**-6) + (sigma33 * 10**-6)) / 2
         self.sgm = sgm_para - sgm_par # TODO: maybe set this up better, figure out what these terms are
 
+        # TODO: calc reduced anisotropy term (delta_sigma) and asymmetry parameter (eta) from csa tensors
+        self.aniso = -94.25e-6
+        self.eta = 0.9469
+
         # Calculate spectral density terms.
         self.J_f = 1 / (1 + (self.omegaF**2 * self.tc**2))
         #self.J_h = 1 / (1 + (self.omegaF * self.omegaH * self.tc**2))
@@ -98,7 +102,7 @@ class Calc_19F_Relaxation:
 
         # ML
         return ((self.gammaF**2) * (self.gammaH**2) * (self.h_bar**2) * (10**-14) / 
-                (10 * (self.fh_dist**6))
+                (20 * (self.fh_dist**6))
                 ) * self.tc * (4 + 3 * self.J_f + 6 * self.J_h + self.J_HmF + 6 * self.J_HpF)
 
     def calc_csa_r1(self):
@@ -112,7 +116,7 @@ class Calc_19F_Relaxation:
         #         )
 
         # ML
-        return (2 / 15) * (self.sgm**2) * (self.omegaF**2) * self.tc * self.J_f
+        return (2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) * (self.omegaF**2) * self.tc * self.J_f
 
     def calc_csa_r2(self):
         """
@@ -125,7 +129,7 @@ class Calc_19F_Relaxation:
         #         )
 
         # ML
-        return ((2 / 15) * self.sgm**2 * self.omegaF**2 * self.tc * (2 / 3 + self.J_f / 2))
+        return ((2 / 15) * self.aniso**2 * (1 + (self.eta**2) / 3) * self.omegaF**2 * self.tc * (2 / 3 + self.J_f / 2))
 
     def calc_overall_r1_r2(self):
         """
