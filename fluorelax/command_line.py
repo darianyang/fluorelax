@@ -44,8 +44,8 @@ def create_cmd_arguments():
     # create new group for required args 
     required_args = parser.add_argument_group("Required Arguments") 
 
-    required_args.add_argument("-c", "--coord", required = True, 
-        help = "The MD trajectory file or coordinate file.", action = "store", 
+    required_args.add_argument("-c", "--coord", required = True, nargs="+",
+        help = "The MD trajectory file(s) or coordinate file(s).", action = "store", 
         dest = "crd", type=str)
 
     required_args.add_argument("-p", "--parm", required = True, 
