@@ -15,34 +15,32 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__': 
     
     # args_list
-    parm = "data/3k0n_w4f_dry.prmtop"
-    crd = "data/3k0n_w4f_frame_198ns_dry.nc"
+    # parm = "data/3k0n_w4f_dry.prmtop"
+    # crd = "data/3k0n_w4f_frame_198ns_dry.nc"
     # parm = "data/3k0n_w4f_solv.prmtop"
     # crd = "data/3k0n_w4f_frame_198ns_solv.nc"
     magnet = 14.1                   # Tesla (600 MHz of 1H+)
     tc = 8.2e-9                     # 8.2ns for CypA, tc in sec
-    reduced_anisotropy = 62.8       # ppm, reduced anisotropy for W4F
-    asymmetry_parameter = 0.9       # asymmetry parameter for W4F
-
+ 
+    # CSA tensors for 4F-Trp
     sgm11 = 11.2
     sgm22 = -48.3
     sgm33 = -112.8
 
-
-    # """
-    # Command line
-    # """
-    # # Create command line arguments with argparse
-    # argument_parser = create_cmd_arguments()
-    # # Retrieve list of args
-    # args_list = handle_command_line(argument_parser)
+    """
+    Command line
+    """
+    # Create command line arguments with argparse
+    argument_parser = create_cmd_arguments()
+    # Retrieve list of args
+    args = handle_command_line(argument_parser)
 
     """
     Load trajectory or pdb data and calc all F-H distances.
     # TODO: do for each frame, also test with water
     """
     # TODO: for big trajectories, can't load in_memory, must stream it but this can be slow
-    traj = load_traj(parm, crd, step=1)
+    traj = load_traj(args.parm, args.crd, step=1)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """
