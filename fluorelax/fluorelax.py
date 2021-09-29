@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # TODO: do for each frame, also test with water
     """
     # TODO: for big trajectories, can't load in_memory, must stream it but this can be slow
-    traj = load_traj(args.parm, [args.crd], step=args.step_size)
+    traj = load_traj(args.parm, args.crd, step=args.step_size)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     """
     Save the frame, avg and stdev R1 and R2 data as a tsv?
     """
-    if args.output_file is True:
+    if args.output_file is not None:
         np.savetxt(args.output_file, r1_r2, delimiter="\t")
 
     """
@@ -85,9 +85,9 @@ if __name__ == '__main__':
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    #plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
     #plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    #plt.show()
+    plt.show()
 
