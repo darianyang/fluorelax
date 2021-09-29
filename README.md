@@ -1,6 +1,6 @@
 fluorelax
 =================================
-A prescription to calculate pragmatic relaxation rates of fluorinated biomolecules.
+Calculate pragmatic relaxation rates of fluorinated biomolecules from molecular dynamics trajectories.
 
 This repository is currently under development.
 

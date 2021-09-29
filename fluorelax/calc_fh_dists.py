@@ -66,7 +66,7 @@ class Calc_FH_Dists(AnalysisBase):
 
         # TODO: is there a better way to accoount for larger proton lists?
         # 3+ columns: 1 for the frame index, and X for array of FH distances
-        self.results = np.zeros((self.n_frames, 2 * len(self.protons)))
+        self.results = np.zeros((self.n_frames, 10 * len(self.protons)))
 
     def _single_frame(self):
         """
