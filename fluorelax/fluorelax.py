@@ -2,7 +2,7 @@
 Main call.
 
 TODO:
-- parallize the mda processing portion?
+- parallize the mda processing portion? (dask)
 """
 
 from command_line import *
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     Load trajectory or pdb data and calc all F-H distances.
     # TODO: do for each frame, also test with water
     """
-    traj = load_traj(parm, crd, step=10)
+    traj = load_traj(parm, crd, step=1)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """
@@ -51,9 +51,13 @@ if __name__ == '__main__':
     #print(fh_dist_base.results)
 
     # TODO: update to ndarrays, maybe make into function, seperate script?
-    r1 = []
-    r2 = []
-    for frame in fh_dist_base.results[:,1:]:
+    
+    # TODO: make this able to take multiple files and find stdev, maybe a seperate proc function
+
+    # array of size frames x 3 columns (frame, avg R1, avg R2) # TODO: add stdev?
+    r1_r2 = np.zeros(shape=(len(fh_dist_base.results[:,1:]), 3))
+    r1_r2[:, 0] = fh_dist_base.results[:,0] 
+    for num, frame in enumerate(fh_dist_base.results[:,1:]):
         avg_r1 = []
         avg_r2 = []
         for fh_dist in frame:
@@ -63,9 +67,9 @@ if __name__ == '__main__':
             R1, R2 = calc_relax.calc_overall_r1_r2()
             avg_r1.append(R1)
             avg_r2.append(R2)
-        r1.append(np.mean(avg_r1))
-        r2.append(np.mean(avg_r2))
-    
+        r1_r2[num, 1] = np.mean(avg_r1)
+        r1_r2[num, 2] = np.mean(avg_r2)
+
     #print(f"R1: {r1} \n")
     #print(f"R2: {r2} \n")
 
@@ -78,8 +82,10 @@ if __name__ == '__main__':
     """
     Plot the avg R1 and R2 per frame. TODO: put into a seperate plotting script.
     """
-    plt.plot(fh_dist_base.results[:,0], r1)
-    plt.plot(fh_dist_base.results[:,0], r2)
+    # plt.plot(fh_dist_base.results[:,0], r1)
+    # plt.plot(fh_dist_base.results[:,0], r2)
+    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
     plt.show()
