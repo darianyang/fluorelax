@@ -19,7 +19,7 @@ class Calc_19F_Relaxation:
     gammaF = 25.17e7                        # rad / sec * Tesla
 
     # arguments here are instance attributes, varying for each instance created
-    def __init__(self, tc, magnet, fh_dist, sigma11, sigma22, sigma33, aniso, eta):
+    def __init__(self, tc, magnet, sigma11, sigma22, sigma33, aniso, eta, fh_dist=None):
         """
         Relaxation calculation constants.
 
@@ -30,8 +30,6 @@ class Calc_19F_Relaxation:
         magnet : float
             The magnetic induction value in Tesla. 
             e.g. 14.1 T = 600MHz (1H+ freq)
-        fh_dist : float
-            19F-1H distance for a single proton. Input in Angstroms, conveted to m.
         sigma11 : float
             CSA tensor (ppm)
         sigma22 : float
@@ -42,10 +40,14 @@ class Calc_19F_Relaxation:
             Reduced anisotropy term (delta_sigma) 
         eta : float
             Asymmetry parameter
+        fh_dist : float
+            19F-1H distance for a single proton. Input in Angstroms, conveted to m.
+            Specifically needed to calculate dipole-dipole contributions.
         """
         self.tc = float(tc)
         self.magnet = float(magnet)
-        self.fh_dist = float(fh_dist) * 10**-10 # Angstrom to meters
+        if fh_dist is not None:
+            self.fh_dist = float(fh_dist) * 10**-10 # Angstrom to meters
         
         # omega = resonance frequency = gamma * Bo (static NMR field - Tesla) 
         #self.omegaH = float(self.gammaH * self.magnet)
@@ -149,10 +151,10 @@ class Calc_19F_Relaxation:
         r1_csa = self.calc_csa_r1()
         r2_dd = self.calc_dd_r2()   
         r2_csa = self.calc_csa_r2()
-        # print(f"\nR1dd: {r1_dd}")
-        # print(f"R1csa: {r1_csa}")
-        # print(f"R2dd: {r2_dd}")
-        # print(f"R2csa: {r2_csa}")
+        print(f"\nR1dd: {r1_dd}")
+        print(f"R1csa: {r1_csa}")
+        print(f"R2dd: {r2_dd}")
+        print(f"R2csa: {r2_csa}")
 
         # according to Rieko
         # R1 = (r1_dd ** 2) + (r1_csa ** 2)

@@ -78,20 +78,28 @@ if __name__ == '__main__':
     # array of size frames x 3 columns (frame, avg R1, avg R2) # TODO: add stdev?
     r1_r2 = np.zeros(shape=(len(fh_dist_base.results[:,1:]), 3))
     r1_r2[:, 0] = fh_dist_base.results[:,0]
+
+    # Here: calling each calc class seperately and only sum the dd contributions, csa is not dependent
     for num, dists in enumerate(fh_dist_base.results[:,1:]):
+        calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, aniso, eta)
+        r1_csa = calc_relax.calc_csa_r1()
+        r2_csa = calc_relax.calc_csa_r2()
         # TODO: these are relatively small lists, may not need to change to ndarray
             # but if I do, then I need to cut out the NaN or zero values before the np.mean step
-        avg_r1 = []
-        avg_r2 = []
+        r1_dd = 0
+        r2_dd = 0
         for fh_dist in dists:
             if fh_dist == 0:
                 continue # TODO: is there a better way to do this?
-            calc_relax = Calc_19F_Relaxation(tc, magnet, fh_dist, sgm11, sgm22, sgm33, aniso, eta)
-            R1, R2 = calc_relax.calc_overall_r1_r2()
-            avg_r1.append(R1)
-            avg_r2.append(R2)
-        r1_r2[num, 1] = np.sum(avg_r1)
-        r1_r2[num, 2] = np.mean(avg_r2)
+            # instantiate the calc_relax class and then call individual class methods
+            calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, aniso, eta, fh_dist)
+            # sum each dd contribution
+            r1_dd += calc_relax.calc_dd_r1()
+            r2_dd += calc_relax.calc_dd_r2()
+
+        # fill in col 1 (R1), col 2 (R2)
+        r1_r2[num, 1] = r1_dd + r1_csa
+        r1_r2[num, 2] = r2_dd + r2_csa
 
     #print(f"R1: {r1} \n")
     #print(f"R2: {r2} \n")
@@ -107,9 +115,9 @@ if __name__ == '__main__':
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
-    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
+    #plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    #plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    plt.show()
+    #plt.show()
 
