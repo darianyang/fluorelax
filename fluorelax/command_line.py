@@ -42,6 +42,8 @@ def create_cmd_arguments():
                              "'w4f', 'w5f', 'w6f', 'w7f'.",
                         type=str)
 
+    # TODO: maybe have a mutually exclusive group for sigma11/22/33 or aniso and eta
+
     ##########################################################
     ############### REQUIRED ARGUMENTS #######################
     ##########################################################

@@ -55,25 +55,25 @@ class Calc_19F_Relaxation:
         
         # TODO: make these dynamically calculated (using magnet)
         # MHz to Hz (per cycle or 2pi), times 2pi 
-        self.omegaH = 600.133e6 * (2 * np.pi) # MHz at 14.1T 
-        self.omegaF = 564.617e6 * (2 * np.pi) # MHz at 14.1T
-
-        # calc_csa tensor terms
-        sgm_para = sigma11 * 10**-6
-        sgm_par = ((sigma22 * 10**-6) + (sigma33 * 10**-6)) / 2
-        self.sgm = sgm_para - sgm_par # TODO: maybe set this up better, figure out what these terms are
+        self.omegaH = 600.133e6 * (2 * np.pi) # Hz at 14.1T 
+        self.omegaF = 564.617e6 * (2 * np.pi) # Hz at 14.1T
 
         # TODO: calc reduced anisotropy term (delta_sigma) and asymmetry parameter (eta) from csa tensors
-        self.aniso = aniso
-        self.eta = eta
+        # self.aniso = aniso
+        # self.eta = eta
 
-        # testing calc of aniso and eta from sgm
-        # self.aniso = (1 / 3) * (sigma11 + sigma22 + sigma33)
-        # self.eta = (sigma22 - sigma11) / (sigma33 - self.aniso)
+        # convert from ppm to MHz
+        sigma11 *= 10**-6
+        sigma22 *= 10**-6
+        sigma33 *= 10**-6
+
+        # calc of aniso and eta from csa tensors using Haberlen convention
+        iso = ((1 / 3) * (sigma11 + sigma22 + sigma33))
+        self.aniso = (3 * (sigma33 - iso)) / 2
+        self.eta = (sigma22 - sigma11) / (sigma33 - iso)
 
         # Calculate spectral density terms.
         self.J_f = 1 / (1 + (self.omegaF**2 * self.tc**2))
-        #self.J_h = 1 / (1 + (self.omegaF * self.omegaH * self.tc**2))
         self.J_h = 1 / (1 + (self.omegaH**2 * self.tc**2))
         self.J_HmF = 1 / (1 + ((self.omegaF - self.omegaH)**2 * self.tc**2))
         self.J_HpF = 1 / (1 + ((self.omegaF + self.omegaH)**2 * self.tc**2))
@@ -110,7 +110,6 @@ class Calc_19F_Relaxation:
         #                )
         #         )
 
-        # ML
         return ((self.gammaF**2) * (self.gammaH**2) * (self.h_bar**2) * (10**-14) / 
                 (20 * (self.fh_dist**6))
                 ) * self.tc * (4 + 3 * self.J_f + 6 * self.J_h + self.J_HmF + 6 * self.J_HpF)
@@ -125,8 +124,9 @@ class Calc_19F_Relaxation:
         #     (1 / (1 + ((self.omegaF ** 2) * (self.tc ** 2))))
         #         )
 
-        # ML
-        return (2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) * (self.omegaF**2) * self.tc * self.J_f
+        return ((2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
+                * (self.omegaF**2) * self.tc * self.J_f
+                )
 
     def calc_csa_r2(self):
         """
@@ -138,8 +138,9 @@ class Calc_19F_Relaxation:
         #     (4 + (3 / (1 + ((self.omegaF ** 2) * (self.tc ** 2)))))
         #         )
 
-        # ML
-        return ((2 / 15) * self.aniso**2 * (1 + (self.eta**2) / 3) * self.omegaF**2 * self.tc * (2 / 3 + self.J_f / 2))
+        return ((2 / 15) * self.aniso**2 * (1 + (self.eta**2) / 3) 
+                * self.omegaF**2 * self.tc * (2 / 3 + self.J_f / 2)
+                )
 
     def calc_overall_r1_r2(self):
         """
