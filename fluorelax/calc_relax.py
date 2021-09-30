@@ -67,6 +67,10 @@ class Calc_19F_Relaxation:
         self.aniso = aniso
         self.eta = eta
 
+        # testing calc of aniso and eta from sgm
+        # self.aniso = (1 / 3) * (sigma11 + sigma22 + sigma33)
+        # self.eta = (sigma22 - sigma11) / (sigma33 - self.aniso)
+
         # Calculate spectral density terms.
         self.J_f = 1 / (1 + (self.omegaF**2 * self.tc**2))
         #self.J_h = 1 / (1 + (self.omegaF * self.omegaH * self.tc**2))

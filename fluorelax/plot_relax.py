@@ -109,3 +109,67 @@ class Plot_Relaxation:
 
         #fig.tight_layout()
         #fig.savefig("figures/test.png", dpi=300, transparent=False)
+
+    def plot_19F_r1_r2(R, type):
+        """
+        Parameters
+        ----------
+        R : str
+            Can be 'R1' or 'R2'.
+        type : str
+            Can be 'overall' (avg and stdev) or 'singles' (all individual datasets).
+        """
+        cmap = cm.Dark2
+        norm = Normalize(vmin=0, vmax=3)
+
+        fig, ax = plt.subplots(ncols=2, sharey=True, gridspec_kw={'width_ratios' : [20, 5]})
+        exp_r1 = {"w4f":1.99, "w5f":1.19, "w6f":1.25, "w7f":1.20}
+        exp_r2 = {"w4f":109.1, "w5f":64.8, "w6f":63.0, "w7f":109.6}
+
+        if R == "R1":
+            ylim = (0, 5)
+            index = 1
+            for num, r in enumerate(exp_r1.values()):
+                ax[0].axhline(y=r, xmin=0, xmax=1, color=cmap(norm(num)), linestyle="--")
+                ax[1].axhline(y=r, xmin=0, xmax=1, color=cmap(norm(num)), linestyle="--")
+                
+        elif R == "R2":
+            ylim = (60, 140)
+            index = 2
+            for num, r in enumerate(exp_r2.values()):
+                ax[0].axhline(y=r, xmin=0, xmax=1, color=cmap(norm(num)), linestyle="--")
+                ax[1].axhline(y=r, xmin=0, xmax=1, color=cmap(norm(num)), linestyle="--")
+
+        else:
+            raise ValueError("'r' must be 'R1' or 'R2'.")
+
+        for num, sys in enumerate(["w4f", "w5f", "w6f", "w7f"]):
+            ### overall avg and stdev
+            if type == "overall":
+                # SYS plot
+                data = [pre_processing(f"ipq/{sys}/v{i:02d}/1us_noion/19F_R1_R2_newddsum.dat", 
+                        time_units=10**3, index=index) for i in range(0, 5)]
+                avg, stdev = avg_and_stdev(data)
+                line_plot(data[0][0], avg, stdev=stdev, ax=ax, ylim=ylim, label=sys.upper(), 
+                        leg_cols=4, ylabel="Relaxation Rate $s^{-1}$ " + f"({R})", color=cmap(norm(num)))
+
+            ### individual datasets
+            elif type == "singles":
+                fig, ax = plt.subplots(ncols=2, sharey=True, gridspec_kw={'width_ratios' : [20, 5]})
+                for i in range(0, 5):
+                    # SYS plot
+                    data = pre_processing(f"ipq/{sys}/v{i:02d}/1us_noion/19F_R1_R2.dat", 
+                                        time_units=10**3, index=index)
+                    line_plot(data[0], data[index], ax=ax, ylim=ylim, 
+                            ylabel="Relaxation Rate $s^{-1}$" + f"({R})", 
+                            color=cmap(norm(num))
+                            )
+                fig.suptitle(sys)
+                #plt.show()
+
+            else:
+                raise ValueError("Type arg must be 'overall' or 'singles'")
+
+        fig.tight_layout()
+        #plt.show()
+        fig.savefig(f"figures/19F_{R}_5us_all_avg_stdev_newddsum.png", dpi=300, transparent=True)

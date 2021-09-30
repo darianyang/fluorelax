@@ -80,6 +80,8 @@ if __name__ == '__main__':
     r1_r2[:, 0] = fh_dist_base.results[:,0]
 
     # Here: calling each calc class seperately and only sum the dd contributions, csa is not dependent
+    # note this new implementation is alot slower... (compared to having just one calc_relax and averaging later)
+        # but not sure, didn't test the difference
     for num, dists in enumerate(fh_dist_base.results[:,1:]):
         calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, aniso, eta)
         r1_csa = calc_relax.calc_csa_r1()
@@ -115,9 +117,9 @@ if __name__ == '__main__':
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    #plt.plot(r1_r2[:, 0], r1_r2[:, 1])
-    #plt.plot(r1_r2[:, 0], r1_r2[:, 2])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
     #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
     #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    #plt.show()
+    plt.show()
 
