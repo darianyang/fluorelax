@@ -19,7 +19,7 @@ class Calc_19F_Relaxation:
     gammaF = 25.17e7                        # rad / sec * Tesla
 
     # arguments here are instance attributes, varying for each instance created
-    def __init__(self, tc, magnet, sigma11, sigma22, sigma33, aniso, eta, fh_dist=None):
+    def __init__(self, tc, magnet, sigma11, sigma22, sigma33, fh_dist=None):
         """
         Relaxation calculation constants.
 
@@ -29,47 +29,39 @@ class Calc_19F_Relaxation:
             Rotational coorelation time (sec) of the protein of interest.
         magnet : float
             The magnetic induction value in Tesla. 
-            e.g. 14.1 T = 600MHz (1H+ freq)
+            e.g. 14.1 T = 600MHz (1H+ freq), for proton: 42.58MHz/T
         sigma11 : float
-            CSA tensor (ppm)
+            CSA xx tensor (ppm)
         sigma22 : float
-            CSA tensor (ppm)
+            CSA yy tensor (ppm)
         sigma33 : float
-            CSA tensor (ppm)
-        aniso : float
-            Reduced anisotropy term (delta_sigma) 
-        eta : float
-            Asymmetry parameter
+            CSA zz tensor (ppm)
         fh_dist : float
-            19F-1H distance for a single proton. Input in Angstroms, conveted to m.
+            19F-1H distance for a single proton. Input in Angstroms, conveted to meters.
             Specifically needed to calculate dipole-dipole contributions.
         """
+        if fh_dist is not None:
+            # convert Angstroms to meters
+            self.fh_dist = float(fh_dist) * 10**-10
+        
         self.tc = float(tc)
         self.magnet = float(magnet)
-        if fh_dist is not None:
-            self.fh_dist = float(fh_dist) * 10**-10 # Angstrom to meters
-        
-        # omega = resonance frequency = gamma * Bo (static NMR field - Tesla) 
-        #self.omegaH = float(self.gammaH * self.magnet)
-        #self.omegaF = float(self.gammaF * self.magnet)
-        
-        # TODO: make these dynamically calculated (using magnet)
-        # MHz to Hz (per cycle or 2pi), times 2pi 
-        self.omegaH = 600.133e6 * (2 * np.pi) # Hz at 14.1T 
-        self.omegaF = 564.617e6 * (2 * np.pi) # Hz at 14.1T
 
-        # TODO: calc reduced anisotropy term (delta_sigma) and asymmetry parameter (eta) from csa tensors
-        # self.aniso = aniso
-        # self.eta = eta
+        # omega = resonance frequency = gamma * Bo (static NMR field in Tesla) 
+        self.omegaH = float(self.gammaH * self.magnet)
+        self.omegaF = float(self.gammaF * self.magnet)
 
-        # convert from ppm to MHz
+        # convert from ppm to MHz, but no need to incorporate omega_F ...
         sigma11 *= 10**-6
         sigma22 *= 10**-6
         sigma33 *= 10**-6
 
-        # calc of aniso and eta from csa tensors using Haberlen convention
+        # calc of aniso and eta from csa tensors using Haberlen convention:
+        # isotropic chemical shift
         iso = ((1 / 3) * (sigma11 + sigma22 + sigma33))
+        # reduced anisotropy
         self.aniso = (3 * (sigma33 - iso)) / 2
+        # asymmetry parameter
         self.eta = (sigma22 - sigma11) / (sigma33 - iso)
 
         # Calculate spectral density terms.
@@ -91,7 +83,6 @@ class Calc_19F_Relaxation:
         #                )
         #         )
 
-        # ML 
         return ((self.gammaF**2) * (self.gammaH**2) * (self.h_bar**2) * (10**-14) / 
                 (10 * (self.fh_dist**6))
                 ) * self.tc * (3 * self.J_f + self.J_HmF + 6 * self.J_HpF)
@@ -144,8 +135,8 @@ class Calc_19F_Relaxation:
 
     def calc_overall_r1_r2(self):
         """
-        Overall relaxation: R = (R_dd)^2 + (R_csa)^2.
-        Main public method of the Calc_19F_Relaxation.
+        Overall relaxation: R = R_dd + R_csa.
+        Main public method of the Calc_19F_Relaxation class.
 
         Returns
         -------
@@ -165,7 +156,6 @@ class Calc_19F_Relaxation:
         # R1 = (r1_dd ** 2) + (r1_csa ** 2)
         # R2 = (r2_dd ** 2) + (r2_csa ** 2)
 
-        # according to Manman's code
         R1 = r1_dd + r1_csa
         R2 = r2_dd + r2_csa
         return R1, R2

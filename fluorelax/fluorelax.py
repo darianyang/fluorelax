@@ -36,26 +36,18 @@ if __name__ == '__main__':
         sgm11 = 11.2
         sgm22 = -48.3
         sgm33 = -112.8
-        aniso = -94.25e-6
-        eta = 0.9469
     elif args.system == "w5f":
         sgm11 = 4.8
         sgm22 = -60.5
         sgm33 = -86.1
-        aniso = 78.1e-6
-        eta = 0.4917
     elif args.system == "w6f":
         sgm11 = 12.9
         sgm22 = -51.2
         sgm33 = -91.6
-        aniso = 84.3e-6
-        eta = 0.7189
     elif args.system == "w7f":
         sgm11 = 4.6
         sgm22 = -48.3
         sgm33 = -123.3
-        aniso = -101.45e-6
-        eta = 0.7822
     
     """
     Load trajectory or pdb data and calc all F-H distances.
@@ -83,7 +75,7 @@ if __name__ == '__main__':
     # note this new implementation is alot slower... (compared to having just one calc_relax and averaging later)
         # but not sure, didn't test the difference
     for num, dists in enumerate(fh_dist_base.results[:,1:]):
-        calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, aniso, eta)
+        calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33)
         r1_csa = calc_relax.calc_csa_r1()
         r2_csa = calc_relax.calc_csa_r2()
         # TODO: these are relatively small lists, may not need to change to ndarray
@@ -94,7 +86,7 @@ if __name__ == '__main__':
             if fh_dist == 0:
                 continue # TODO: is there a better way to do this?
             # instantiate the calc_relax class and then call individual class methods
-            calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, aniso, eta, fh_dist)
+            calc_relax = Calc_19F_Relaxation(tc, magnet, sgm11, sgm22, sgm33, fh_dist)
             # sum each dd contribution
             r1_dd += calc_relax.calc_dd_r1()
             r2_dd += calc_relax.calc_dd_r2()
