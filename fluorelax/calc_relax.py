@@ -133,7 +133,7 @@ class Calc_19F_Relaxation:
                 * self.omegaF**2 * self.tc * (2 / 3 + self.J_f / 2)
                 )
 
-    def calc_overall_r1_r2(self):
+    def calc_overall_r1_r2(self, print=False):
         """
         Overall relaxation: R = R_dd + R_csa.
         Main public method of the Calc_19F_Relaxation class.
@@ -147,10 +147,13 @@ class Calc_19F_Relaxation:
         r1_csa = self.calc_csa_r1()
         r2_dd = self.calc_dd_r2()   
         r2_csa = self.calc_csa_r2()
-        print(f"\nR1dd: {r1_dd}")
-        print(f"R1csa: {r1_csa}")
-        print(f"R2dd: {r2_dd}")
-        print(f"R2csa: {r2_csa}")
+
+        # TODO: add this as logger items instead of print
+        if print is True:
+            print(f"\nR1dd: {r1_dd}")
+            print(f"R1csa: {r1_csa}")
+            print(f"R2dd: {r2_dd}")
+            print(f"R2csa: {r2_csa}")
 
         # according to Rieko
         # R1 = (r1_dd ** 2) + (r1_csa ** 2)

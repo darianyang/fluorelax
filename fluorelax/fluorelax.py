@@ -5,20 +5,18 @@ TODO:
 - parallize the mda processing portion? (dask)
 """
 
-from command_line import *
-from calc_relax import *
-from calc_fh_dists import *
-
+import numpy as np
 import matplotlib.pyplot as plt
+
+from command_line import create_cmd_arguments, handle_command_line
+from calc_relax import Calc_19F_Relaxation
+from calc_fh_dists import load_traj, Calc_FH_Dists
+from plot_relax import Plot_Relaxation
 
 # if python file is being used 
 if __name__ == '__main__': 
     
-    # args_list
-    # parm = "data/3k0n_w4f_dry.prmtop"
-    # crd = "data/3k0n_w4f_frame_198ns_dry.nc"
-    # parm = "data/3k0n_w4f_solv.prmtop"
-    # crd = "data/3k0n_w4f_frame_198ns_solv.nc"
+    # args_list to save time for now (TODO)
     magnet = 14.1                   # Tesla (600 MHz of 1H+)
     tc = 8.2e-9                     # 8.2ns for CypA, tc in sec
 
@@ -61,9 +59,8 @@ if __name__ == '__main__':
     For each distance value, calculate the R1 and R2 value.
     """
 
-    #print(fh_dist_base.results)
-
     # TODO: update to ndarrays, maybe make into function, seperate script?
+    # test speed and optimize
     
     # TODO: make this able to take multiple files and find stdev, maybe a seperate proc function
 
@@ -95,9 +92,6 @@ if __name__ == '__main__':
         r1_r2[num, 1] = r1_dd + r1_csa
         r1_r2[num, 2] = r2_dd + r2_csa
 
-    #print(f"R1: {r1} \n")
-    #print(f"R2: {r2} \n")
-
     """
     Save the frame, avg and stdev R1 and R2 data as a tsv?
     """
@@ -105,13 +99,17 @@ if __name__ == '__main__':
         np.savetxt(args.output_file, r1_r2, delimiter="\t")
 
     """
-    Plot the avg R1 and R2 per frame. TODO: put into a seperate plotting script.
+    Plot the R1 and R2 data.
     """
     # plt.plot(fh_dist_base.results[:,0], r1)
     # plt.plot(fh_dist_base.results[:,0], r2)
-    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
-    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
-    #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
-    #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    plt.show()
+    # plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    # plt.plot(r1_r2[:, 0], r1_r2[:, 2])
+    # #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
+    # #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
+    # plt.show()
+
+    plotter = Plot_Relaxation(r1_r2, "dist")
+    plotter.plot_r2()
+    plt.show()    
 
