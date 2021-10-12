@@ -50,18 +50,6 @@ class Plot_Relaxation:
         # stack the new time axis and all other columns of the dataset
         self.data = np.vstack([time, self.data[:,1:]])
 
-    def avg_and_stdev(self, multi_data, index):
-        """
-        Returns the average and stdev of multiple timeseries datasets.
-
-        Parameters
-        ----------
-        multi_data : 
-        """
-        # only the y values, x axis is time.
-        data = [i[index] for i in multi_data]
-        return np.average(data, axis=0), np.std(data, axis=0)
-
     def formatting(self):
         # TODO: add if plot_type == "line" and "dist"
         plt.rcParams['figure.figsize']= (10,6)
@@ -90,7 +78,7 @@ class Plot_Relaxation:
         # TODO: maybe normalize density to 1 and then set xticks np.arange(0, 1, 0.2)
         #ax.set_xticks(np.arange(0, 1.2, 0.2))
         #ax.set_xticks(np.arange(0, np.max(density) + 0.5, 0.5))
-        ax.set_xlabel("Relaxation", labelpad=28, fontweight="bold")
+        ax.set_xlabel("Relaxation ($s^{-1}$)", labelpad=28, fontweight="bold")
 
         # Remove the non-bottom spines
         for kw in ("left", "right", "top"):
