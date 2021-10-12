@@ -1,4 +1,4 @@
-fluorelax
+![fluorelax](docs/logo_crop.png)
 =================================
 Calculate pragmatic relaxation rates of fluorinated biomolecules from molecular dynamics trajectories.
 
