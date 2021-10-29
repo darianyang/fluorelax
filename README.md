@@ -21,6 +21,13 @@ To switch to an existing branch, use:
 
 To submit your feature to be incorporated into master branch, you should submit a `Pull Request`. The repository maintainers will review your pull request before accepting your changes.
 
+
+### Usage Examples
+``` Bash
+fluorelax.py -c data/3k0n_w4f_frame_198ns_dry.nc -p data/3k0n_w4f_dry.prmtop --sys w4f
+```
+
+
 ### Copyright
 
 Copyright (c) 2020, Darian Yang

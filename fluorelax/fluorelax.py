@@ -101,15 +101,17 @@ if __name__ == '__main__':
     """
     Plot the R1 and R2 data.
     """
-    # plt.plot(fh_dist_base.results[:,0], r1)
-    # plt.plot(fh_dist_base.results[:,0], r2)
-    # plt.plot(r1_r2[:, 0], r1_r2[:, 1])
-    # plt.plot(r1_r2[:, 0], r1_r2[:, 2])
-    # #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
-    # #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
-    # plt.show()
+    # plt.plot(fh_dist_base.results[:,0], r1_r2[:,0])
+    # plt.plot(fh_dist_base.results[:,0], r1_r2[:,1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 1])
+    plt.plot(r1_r2[:, 0], r1_r2[:, 2])
+    print(f"R1-AVG={np.mean(r1_r2[:,1])}\nR2-AVG={np.mean(r1_r2[:,2])}")
+    #plt.hlines(1.99, xmin=0, xmax=fh_dist_base.results[-1,0])    # R1
+    #plt.hlines(109.1, xmin=0, xmax=fh_dist_base.results[-1,0])   # R2
+    plt.show()
 
-    plotter = Plot_Relaxation(r1_r2, "dist")
-    plotter.plot_r2()
-    plt.show()    
+    # plotter class
+    # plotter = Plot_Relaxation(r1_r2, "dist")
+    # plotter.plot_r2()
+    # plt.show()    
 

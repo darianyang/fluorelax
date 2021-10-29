@@ -115,7 +115,11 @@ class Calc_19F_Relaxation:
         #     (1 / (1 + ((self.omegaF ** 2) * (self.tc ** 2))))
         #         )
 
-        return ((2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
+        # return ((2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
+        #         * (self.omegaF**2) * self.tc * self.J_f
+        #         )
+
+        return ((3 / 10) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
                 * (self.omegaF**2) * self.tc * self.J_f
                 )
 
