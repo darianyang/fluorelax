@@ -9,22 +9,6 @@ import MDAnalysis as mda
 from MDAnalysis.analysis import distances
 from MDAnalysis.analysis.base import AnalysisBase
 
-def load_traj(parm, crd, step=1):
-    """
-    Parameters
-    ----------
-    parm : str
-        The path to the parameter file. 
-    crd : str or list ? TODO
-        The path to the coordinate/trajectory file.
-    step : int
-        Step size of the coordinates being loaded, default 1.
-
-    Returns
-    -------
-    mda Universe object
-    """
-    return mda.Universe(parm, crd, in_memory=True, in_memory_step=step)
 
 # subclass of AnalysisBase
 class Calc_FH_Dists(AnalysisBase):

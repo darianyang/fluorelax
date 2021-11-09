@@ -7,6 +7,7 @@ TODO:
 
 import numpy as np
 import matplotlib.pyplot as plt
+import MDAnalysis as mda
 
 from command_line import create_cmd_arguments, handle_command_line
 from calc_relax import Calc_19F_Relaxation
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     # TODO: do for each frame, also test with water
     """
     # TODO: for big trajectories, can't load in_memory, must stream it but this can be slow
-    traj = load_traj(args.parm, args.crd, step=args.step_size)
+    traj = mda.Universe(args.parm, args.crd, in_memory=True, in_memory_step=args.step_size)
     fh_dist_base = Calc_FH_Dists(traj, dist=3).run()
 
     """

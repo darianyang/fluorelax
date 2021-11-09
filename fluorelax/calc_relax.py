@@ -4,8 +4,6 @@ Fluorelax main relaxation calc.
 
 import numpy as np
 
-# this can be used as a parent class, and child classes can then expand upon it
-# can instantiate the class using the particular function/calc that is needed
 class Calc_19F_Relaxation:
     """
     Create a calculation class with attributes X. (constants?) TODO
@@ -115,11 +113,8 @@ class Calc_19F_Relaxation:
         #     (1 / (1 + ((self.omegaF ** 2) * (self.tc ** 2))))
         #         )
 
-        # return ((2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
-        #         * (self.omegaF**2) * self.tc * self.J_f
-        #         )
-
-        return ((3 / 10) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
+        # from Lu et al. 2019
+        return ((2 / 15) * (self.aniso**2) * (1 + (self.eta**2) / 3) 
                 * (self.omegaF**2) * self.tc * self.J_f
                 )
 
