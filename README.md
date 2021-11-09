@@ -1,7 +1,6 @@
 ![fluorelax](docs/logo_crop.jpeg "fluorelax")
 =================================
 ![tests](https://github.com/darianyang/fluorelax/actions/workflows/test.yml/badge.svg)
-![coverage](docs/coverage.svg)
 
 Calculate pragmatic relaxation rates of fluorinated biomolecules from molecular dynamics trajectories.
 
