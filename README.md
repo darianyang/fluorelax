@@ -25,11 +25,15 @@ To submit your feature to be incorporated into master branch, you should submit 
 
 
 ### Usage Examples
+To run for 4F-Trp using the provided example simulation data:
 ``` Bash
 fluorelax.py -c data/3k0n_w4f_frame_198ns_dry.nc -p data/3k0n_w4f_dry.prmtop --sys w4f
 ```
-
+To view all available arguments and descriptions:
+``` Bash
+fluorelax.py --help
+```
 
 ### Copyright
 
-Copyright (c) 2020, Darian Yang
+Copyright (c) 2021, Darian Yang
