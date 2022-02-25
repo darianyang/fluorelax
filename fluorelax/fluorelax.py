@@ -92,6 +92,10 @@ if __name__ == '__main__':
         # fill in col 1 (R1), col 2 (R2)
         r1_r2[num, 1] = r1_dd + r1_csa
         r1_r2[num, 2] = r2_dd + r2_csa
+    
+    # test seperate values
+    print(r1_dd, r1_csa)
+    print(r2_dd, r2_csa)
 
     """
     Save the frame, avg and stdev R1 and R2 data as a tsv?
