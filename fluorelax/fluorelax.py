@@ -11,7 +11,7 @@ import MDAnalysis as mda
 
 from command_line import create_cmd_arguments, handle_command_line
 from calc_relax import Calc_19F_Relaxation
-from calc_fh_dists import load_traj, Calc_FH_Dists
+from calc_fh_dists import Calc_FH_Dists
 from plot_relax import Plot_Relaxation
 
 # if python file is being used 
