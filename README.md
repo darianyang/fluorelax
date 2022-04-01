@@ -4,7 +4,8 @@
 
 Calculate pragmatic relaxation rates of fluorinated biomolecules from molecular dynamics trajectories.
 
-This repository is currently under development.
+This repository is associated with the following publication:
+* DT Yang, AM Gronenborn, LT Chong, “Integrating Fluorinated, Aromatic Amino Acids into the Framework of the AMBER ff15ipq Force Field.” J. Phys. Chem. A  2022, *in press*; https://doi.org/10.1021/acs.jpca.2c00255
 
 This package reqiures the following:
 - Numpy
